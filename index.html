@@ -1,0 +1,31 @@
+# مثال برمجي لإرسال أمر إلى الهاتف عبر خدمة سحابية
+import requests
+import json
+
+def send_lock_command(device_token, server_key):
+    # رابط خدمة الإرسال من جوجل أو هواوي
+    url = "https://fcm.googleapis.com/fcm/send"
+    
+    # البيانات التي سيستقبلها الهاتف
+    payload = {
+        "to": device_token,
+        "data": {
+            "action": "SET_LOCK_PATTERN",
+            "pattern": "1,2,3,4,5" # ترميز النمط برمجياً
+        },
+        "priority": "high"
+    }
+    
+    headers = {
+        "Authorization": "key=" + server_key,
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    
+    if response.status_code == 200:
+        print("تم إرسال أمر القفل بنجاح إلى الهاتف")
+    else:
+        print("فشل الإرسال، تحقق من مفتاح السيرفر.")
+
+# ملاحظة: device_token يتم الحصول عليه من داخل تطبيقك المثبت على الهاتف
